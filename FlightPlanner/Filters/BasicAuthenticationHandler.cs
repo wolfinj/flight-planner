@@ -11,15 +11,15 @@ namespace FlightPlanner.Filters;
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger, 
-        UrlEncoder encoder, 
+        ILoggerFactory logger,
+        UrlEncoder encoder,
         ISystemClock clock) : base(options, logger, encoder, clock)
     {
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-// skip authentication if endpoint has [AllowAnonymous] attribute
+        // skip authentication if endpoint has [AllowAnonymous] attribute
         var endpoint = Context.GetEndpoint();
         if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
             return AuthenticateResult.NoResult();
@@ -28,7 +28,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             return AuthenticateResult.Fail("Missing Authorization Header");
 
         var authorized = false;
-        
+
         try
         {
             var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
@@ -37,7 +37,6 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             var username = credentials[0];
             var password = credentials[1];
             authorized = username == "codelex-admin" && password == "Password123";
-            // user = await _userService.Authenticate(username, password);
         }
         catch
         {
@@ -47,12 +46,14 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         if (authorized == false)
             return AuthenticateResult.Fail("Invalid Username or Password");
 
-        var claims = new[] {
+        var claims = new[]
+        {
             new Claim(ClaimTypes.Name, "user"),
         };
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, Scheme.Name);
 
-        return AuthenticateResult.Success(ticket);    }
+        return AuthenticateResult.Success(ticket);
+    }
 }

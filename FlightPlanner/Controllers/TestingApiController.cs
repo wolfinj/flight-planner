@@ -13,7 +13,7 @@ namespace FlightPlanner.Controllers
     public class TestingApiController : ControllerBase
     {
         [Route("clear")]
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
         public IActionResult GetFlight()
         {

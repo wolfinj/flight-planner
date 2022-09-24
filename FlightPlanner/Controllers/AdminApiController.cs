@@ -19,5 +19,20 @@ namespace FlightPlanner.Controllers
             if (id>10) return  NotFound("Flight not found.");
             return Ok("hi from admin api.");
         }
+        
+        [Route("flights")]
+        [HttpPut]
+        public IActionResult PutFlight(Flight flight)
+        {
+            return Created("Flight created.",flight);
+        }
+        
+        [Route("flights/{id}")]
+        [HttpDelete]
+        public IActionResult DelFlight(int id)
+        {
+            if (id>10) return  NotFound("Flight not found.");
+            return Ok("hi from admin api.");
+        }
     }
 }
