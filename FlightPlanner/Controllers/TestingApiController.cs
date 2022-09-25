@@ -17,6 +17,7 @@ namespace FlightPlanner.Controllers
         [AllowAnonymous]
         public IActionResult GetFlight()
         {
+            FlightStorage.Clear();
             return Ok("hi from admin api.");
         }
     }

@@ -1,6 +1,6 @@
 namespace FlightPlanner;
 
-public class Flight
+public class Flight : IEquatable<Flight>
 {
     public int Id { get; set; }
     public Airport From { get; set; }
@@ -8,5 +8,15 @@ public class Flight
     public string Carrier { get; set; }
     public string DepartureTime { get; set; }
     public string ArrivalTime { get; set; }
-}
 
+    public bool Equals(Flight? other)
+    {
+        if (From != other.From) return false;
+        if (To != other.To) return false;
+        if (Carrier.Trim() != other.Carrier.Trim()) return false;
+        if (DepartureTime.Trim() != other.DepartureTime.Trim()) return false;
+        if (ArrivalTime.Trim() != other.ArrivalTime.Trim()) return false;
+
+        return true;
+    }
+}
