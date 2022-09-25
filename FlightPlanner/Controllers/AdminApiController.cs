@@ -45,12 +45,13 @@ namespace FlightPlanner.Controllers
             return Created("Flight created.",flight);
         }
         
-        // [Route("flights/{id}")]
-        // [HttpDelete]
-        // public IActionResult DelFlight(int id)
-        // {
-        //     if (id>10) return  NotFound("Flight not found.");
-        //     return Ok("hi from admin api.");
-        // }
+        [Route("flights/{id}")]
+        [HttpDelete]
+        public IActionResult DelFlight(int id)
+        {
+            FlightStorage.DeleteFlightById(id);
+            
+            return Ok();
+        }
     }
 }

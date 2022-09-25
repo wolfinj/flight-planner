@@ -29,4 +29,15 @@ public class FlightStorage
     {
         return _flights.FirstOrDefault(f => f.Id == id);
     }
+
+    public static bool DeleteFlightById(int id)
+    {
+        Flight? flight = GetFlightById(id);
+
+        if (flight is null) return false;
+
+        _flights.Remove(flight);
+        
+        return true;
+    }
 }
