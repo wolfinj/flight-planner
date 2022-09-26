@@ -33,10 +33,8 @@ public static class ExtensionMethods
 
         CompareLogic compare = new CompareLogic();
 
-        DateTime depart, arrive;
-
-        if (!DateTime.TryParse(flight.DepartureTime, out depart) ||
-            !DateTime.TryParse(flight.ArrivalTime, out arrive)) return false;
+        if (!DateTime.TryParse(flight.DepartureTime, out var depart) ||
+            !DateTime.TryParse(flight.ArrivalTime, out var arrive)) return false;
 
         if (depart >= arrive) return false;
 
@@ -56,5 +54,20 @@ public static class ExtensionMethods
                      string.IsNullOrEmpty(airport.AirportCode.Trim());
 
         return !isNull;
+    }
+
+    public static bool AirportContainsKeyword(this Airport airport, string name)
+    {
+        return airport.City.ToLower().Contains(name.ToLower()) ||
+               airport.Country.ToLower().Contains(name.ToLower()) ||
+               airport.AirportCode.ToLower().Contains(name.ToLower());
+    }
+
+    public static bool DoesAirportAlreadyExists(this List<Airport> airports, Airport airport)
+    {
+        CompareLogic compare = new CompareLogic();
+        compare.Config.CaseSensitive = false;
+
+        return airports.Any(a => compare.Compare(a, airport).AreEqual);
     }
 }

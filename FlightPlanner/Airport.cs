@@ -4,11 +4,11 @@ namespace FlightPlanner;
 
 public class Airport : IEquatable<Airport>
 {
-    public string Country { get; set; }
+    public string Country { get; init; }
 
-    public string City { get; set; }
+    public string City { get; init; }
 
-    [JsonPropertyName("airport")] public string AirportCode { get; set; }
+    [JsonPropertyName("airport")] public string AirportCode { get; init; }
 
     public bool Equals(Airport? other)
     {

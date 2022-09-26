@@ -18,7 +18,7 @@ namespace FlightPlanner.Controllers
         public IActionResult GetFlight()
         {
             FlightStorage.Clear();
-            return Ok("hi from admin api.");
+            return Ok("hi From admin api.");
         }
     }
 }
