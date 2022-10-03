@@ -1,50 +1,58 @@
 using FlightPlanner.Exceptions;
+using FlightPlanner.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FlightPlanner.Controllers
+namespace FlightPlanner.Controllers;
+
+[Route("admin-api/flights")]
+[ApiController, Authorize]
+public class AdminApiController : ControllerBase
 {
-    [Route("admin-api")]
-    [ApiController, Authorize]
-    public class AdminApiController : ControllerBase
+    private readonly FlightPlannerDbContext _context;
+
+    public AdminApiController(FlightPlannerDbContext context)
     {
-        [Route("flights/{id}")]
-        [HttpGet]
-        public IActionResult GetFlight(int id)
-        {
-            var flight = FlightStorage.GetFlightById(id);
-            if (flight == null) return NotFound("Flight not found.");
+        _context = context;
+    }
 
-            return Ok(flight);
+    [Route("{id:int}")]
+    [HttpGet]
+    public IActionResult GetFlight(int id)
+    {
+        var flight = FlightStorage.GetFlightById(id, _context);
+
+        if (flight == null) return NotFound("Flight not found.");
+
+        return Ok(flight);
+    }
+
+    [Route("")]
+    [HttpPut]
+    public IActionResult PutFlight(Flight flight)
+    {
+        try
+        {
+            flight = FlightStorage.AddFlight(flight, _context);
+        }
+        catch (FlightAlreadyExistException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (FlightIsNotValidException e)
+        {
+            return BadRequest(e.Message);
         }
 
-        [Route("flights")]
-        [HttpPut]
-        public IActionResult PutFlight(Flight flight)
-        {
-            try
-            {
-                flight = FlightStorage.AddFlight(flight);
-            }
-            catch (FlightAlreadyExistException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (FlightIsNotValidException e)
-            {
-                return BadRequest(e.Message);
-            }
+        return Created("Flight created.", flight);
+    }
 
-            return Created("Flight created.", flight);
-        }
+    [Route("{id:int}")]
+    [HttpDelete]
+    public IActionResult DelFlight(int id)
+    {
+        FlightStorage.DeleteFlightById(id, _context);
 
-        [Route("flights/{id}")]
-        [HttpDelete]
-        public IActionResult DelFlight(int id)
-        {
-            FlightStorage.DeleteFlightById(id);
-
-            return Ok();
-        }
+        return Ok();
     }
 }

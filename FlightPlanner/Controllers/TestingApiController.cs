@@ -1,24 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FlightPlanner.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FlightPlanner.Controllers
+namespace FlightPlanner.Controllers;
+
+[Route("testing-api")]
+[ApiController , Authorize]
+public class TestingApiController : ControllerBase
 {
-    [Route("testing-api")]
-    [ApiController , Authorize]
-    public class TestingApiController : ControllerBase
+    private readonly FlightPlannerDbContext _context;
+        
+    public TestingApiController(FlightPlannerDbContext context)
     {
-        [Route("clear")]
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult GetFlight()
-        {
-            FlightStorage.Clear();
-            return Ok("hi From admin api.");
-        }
+        _context = context;
+    }
+        
+    [Route("clear")]
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult GetFlight()
+    {
+        FlightStorage.Clear(_context);
+        
+        return Ok("Db cleared.");
     }
 }

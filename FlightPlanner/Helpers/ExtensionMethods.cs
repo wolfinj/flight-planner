@@ -5,17 +5,17 @@ namespace FlightPlanner.Helpers;
 
 public static class ExtensionMethods
 {
-    public static void DoesFlightAlreadyExist(this List<Flight> flights, Flight flight)
+    public static void DoesFlightAlreadyExist(this IEnumerable<Flight> flights, Flight flight)
     {
         var doesFlightAlreadyExist = false;
 
-        CompareLogic compare = new CompareLogic();
+        var compare = new CompareLogic();
         compare.Config.MembersToIgnore.Add("Id");
 
-        flights.ForEach(f =>
+        foreach (var fl in flights)
         {
-            if (compare.Compare(f, flight).AreEqual) doesFlightAlreadyExist = true;
-        });
+            if (compare.Compare(fl, flight).AreEqual) doesFlightAlreadyExist = true;
+        }
 
         if (doesFlightAlreadyExist)
         {
@@ -31,7 +31,7 @@ public static class ExtensionMethods
                      !flight.From.IsAirportValid() ||
                      !flight.To.IsAirportValid();
 
-        CompareLogic compare = new CompareLogic();
+        var compare = new CompareLogic();
 
         if (!DateTime.TryParse(flight.DepartureTime, out var depart) ||
             !DateTime.TryParse(flight.ArrivalTime, out var arrive)) return false;
@@ -65,8 +65,13 @@ public static class ExtensionMethods
 
     public static bool DoesAirportAlreadyExists(this List<Airport> airports, Airport airport)
     {
-        CompareLogic compare = new CompareLogic();
-        compare.Config.CaseSensitive = false;
+        var compare = new CompareLogic
+        {
+            Config =
+            {
+                CaseSensitive = false
+            }
+        };
 
         return airports.Any(a => compare.Compare(a, airport).AreEqual);
     }
