@@ -7,15 +7,15 @@ public class FlightPlannerDbContext : DbContext
     public DbSet<Flight> Flights { get; set; }
     public DbSet<Airport> Airports { get; set; }
 
-    protected readonly IConfiguration Configuration;
+    private readonly IConfiguration _configuration;
 
     public FlightPlannerDbContext(IConfiguration configuration)
     {
-        Configuration = configuration;
+        _configuration = configuration;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseSqlite(Configuration.GetConnectionString("Flight-planner"));
+        options.UseSqlite(_configuration.GetConnectionString("Flight-planner"));
     }
 }

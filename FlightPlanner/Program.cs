@@ -1,4 +1,3 @@
-using FlightPlanner.Filters;
 using FlightPlanner.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;

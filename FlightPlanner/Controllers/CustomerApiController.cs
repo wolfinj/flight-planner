@@ -8,12 +8,12 @@ namespace FlightPlanner.Controllers;
 public class CustomerApiController : ControllerBase
 {
     private readonly FlightPlannerDbContext _context;
-        
+
     public CustomerApiController(FlightPlannerDbContext context)
     {
         _context = context;
     }
-    
+
     [Route("airports")]
     [HttpGet]
     public IActionResult GetAirports(string search)
@@ -23,7 +23,7 @@ public class CustomerApiController : ControllerBase
         return Ok(result);
     }
 
-    [Route("flights/{id}")]
+    [Route("flights/{id:int}")]
     [HttpGet]
     public IActionResult GetFlight(int id)
     {
@@ -39,7 +39,7 @@ public class CustomerApiController : ControllerBase
     {
         if (flight.From == flight.To) return BadRequest();
 
-        PageResult result = FlightStorage.SearchFlight(flight, _context);
+        var result = FlightStorage.SearchFlight(flight, _context);
 
         return Ok(result);
     }

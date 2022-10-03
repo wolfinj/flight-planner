@@ -2,7 +2,7 @@ namespace FlightPlanner.Exceptions;
 
 public class FlightIsNotValidException : Exception
 {
-    public FlightIsNotValidException() :base("Flight is not valid.")
+    public FlightIsNotValidException() : base("Flight is not valid.")
     {
     }
 
@@ -10,5 +10,4 @@ public class FlightIsNotValidException : Exception
         : base(message)
     {
     }
-
 }

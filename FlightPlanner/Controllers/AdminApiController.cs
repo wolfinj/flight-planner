@@ -2,73 +2,57 @@ using FlightPlanner.Exceptions;
 using FlightPlanner.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace FlightPlanner.Controllers
+namespace FlightPlanner.Controllers;
+
+[Route("admin-api/flights")]
+[ApiController, Authorize]
+public class AdminApiController : ControllerBase
 {
-    [Route("admin-api")]
-    [ApiController, Authorize]
-    public class AdminApiController : ControllerBase
+    private readonly FlightPlannerDbContext _context;
+
+    public AdminApiController(FlightPlannerDbContext context)
     {
-        private readonly FlightPlannerDbContext _context;
-        
-        public AdminApiController(FlightPlannerDbContext context)
+        _context = context;
+    }
+
+    [Route("{id:int}")]
+    [HttpGet]
+    public IActionResult GetFlight(int id)
+    {
+        var flight = FlightStorage.GetFlightById(id, _context);
+
+        if (flight == null) return NotFound("Flight not found.");
+
+        return Ok(flight);
+    }
+
+    [Route("")]
+    [HttpPut]
+    public IActionResult PutFlight(Flight flight)
+    {
+        try
         {
-            _context = context;
+            flight = FlightStorage.AddFlight(flight, _context);
         }
-        
-        [Route("flights/{id}")]
-        [HttpGet]
-        public IActionResult GetFlight(int id)
+        catch (FlightAlreadyExistException e)
         {
-            var flight = FlightStorage.GetFlightById(id, _context);
-            // var flight = _context.Flights
-            //     .Include(f=>f.From)
-            //     .Include(f=>f.To)
-            //     .FirstOrDefault(f => f.Id == id);
-            
-            if (flight == null) return NotFound("Flight not found.");
-
-            return Ok(flight);
+            return Conflict(e.Message);
         }
-
-        [Route("flights")]
-        [HttpPut]
-        public IActionResult PutFlight(Flight flight)
+        catch (FlightIsNotValidException e)
         {
-            try
-            {
-                flight = FlightStorage.AddFlight(flight, _context);
-                // _context.Flights.Add(flight);
-                // _context.SaveChanges();
-            }
-            catch (FlightAlreadyExistException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (FlightIsNotValidException e)
-            {
-                return BadRequest(e.Message);
-            }
-
-            return Created("Flight created.", flight);
+            return BadRequest(e.Message);
         }
 
-        [Route("flights/{id}")]
-        [HttpDelete]
-        public IActionResult DelFlight(int id)
-        {
-            FlightStorage.DeleteFlightById(id, _context);
-            
-            // var flight = _context.Flights.FirstOrDefault(f => f.Id == id);
-            // if (flight != null)
-            // {
-            //     _context.Flights.Remove(flight);
-            //     _context.SaveChanges();
-            //
-            // }
+        return Created("Flight created.", flight);
+    }
 
-            return Ok();
-        }
+    [Route("{id:int}")]
+    [HttpDelete]
+    public IActionResult DelFlight(int id)
+    {
+        FlightStorage.DeleteFlightById(id, _context);
+
+        return Ok();
     }
 }

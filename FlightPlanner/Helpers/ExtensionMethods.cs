@@ -1,17 +1,15 @@
 using FlightPlanner.Exceptions;
 using KellermanSoftware.CompareNetObjects;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace FlightPlanner.Helpers;
 
 public static class ExtensionMethods
 {
-    public static void DoesFlightAlreadyExist(this  IIncludableQueryable<Flight,Airport> flights, Flight flight)
+    public static void DoesFlightAlreadyExist(this IEnumerable<Flight> flights, Flight flight)
     {
         var doesFlightAlreadyExist = false;
 
-        CompareLogic compare = new CompareLogic();
+        var compare = new CompareLogic();
         compare.Config.MembersToIgnore.Add("Id");
 
         foreach (var fl in flights)
@@ -33,7 +31,7 @@ public static class ExtensionMethods
                      !flight.From.IsAirportValid() ||
                      !flight.To.IsAirportValid();
 
-        CompareLogic compare = new CompareLogic();
+        var compare = new CompareLogic();
 
         if (!DateTime.TryParse(flight.DepartureTime, out var depart) ||
             !DateTime.TryParse(flight.ArrivalTime, out var arrive)) return false;
@@ -67,8 +65,13 @@ public static class ExtensionMethods
 
     public static bool DoesAirportAlreadyExists(this List<Airport> airports, Airport airport)
     {
-        CompareLogic compare = new CompareLogic();
-        compare.Config.CaseSensitive = false;
+        var compare = new CompareLogic
+        {
+            Config =
+            {
+                CaseSensitive = false
+            }
+        };
 
         return airports.Any(a => compare.Compare(a, airport).AreEqual);
     }

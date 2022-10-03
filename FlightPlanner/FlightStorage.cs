@@ -6,22 +6,19 @@ namespace FlightPlanner;
 
 public static class FlightStorage
 {
-    // private static readonly List<Flight> _flights = new();
     private static readonly object _lockObject = new();
-    // private static int _id;
 
-    public static Flight AddFlight(Flight flight , FlightPlannerDbContext context)
+    public static Flight AddFlight(Flight flight, FlightPlannerDbContext context)
     {
         lock (_lockObject)
         {
             context.Flights
-                .Include(f=>f.To)
-                .Include(f=>f.From)
+                .Include(f => f.To)
+                .Include(f => f.From)
                 .DoesFlightAlreadyExist(flight);
 
             if (!flight.IsFlightValid()) throw new FlightIsNotValidException();
 
-            // flight.Id = _id++;
             context.Flights.Add(flight);
             context.SaveChanges();
             return flight;
@@ -35,7 +32,6 @@ public static class FlightStorage
             context.Flights.RemoveRange(context.Flights);
             context.Airports.RemoveRange(context.Airports);
             context.SaveChanges();
-            // _id = 0;
         }
     }
 
@@ -54,7 +50,7 @@ public static class FlightStorage
     {
         lock (_lockObject)
         {
-            List<Airport> airports = new List<Airport>();
+            var airports = new List<Airport>();
 
             var flIncludedAirports = context.Flights
                 .Include(f => f.From)
@@ -76,7 +72,7 @@ public static class FlightStorage
     {
         lock (_lockObject)
         {
-            Flight? flight = GetFlightById(id, context);
+            var flight = GetFlightById(id, context);
 
             if (flight is null) return;
 

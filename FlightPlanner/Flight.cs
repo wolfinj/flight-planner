@@ -4,7 +4,7 @@ namespace FlightPlanner;
 
 public class Flight : IEquatable<Flight>
 {
-    [Key]
+    [Key] 
     public int Id { get; set; }
     public Airport From { get; set; }
     public Airport To { get; set; }
