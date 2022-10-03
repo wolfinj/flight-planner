@@ -21,11 +21,11 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
-            // var flight = FlightStorage.GetFlightById(id);
-            var flight = _context.Flights
-                .Include(f=>f.From)
-                .Include(f=>f.To)
-                .FirstOrDefault(f => f.Id == id);
+            var flight = FlightStorage.GetFlightById(id, _context);
+            // var flight = _context.Flights
+            //     .Include(f=>f.From)
+            //     .Include(f=>f.To)
+            //     .FirstOrDefault(f => f.Id == id);
             
             if (flight == null) return NotFound("Flight not found.");
 
@@ -38,9 +38,9 @@ namespace FlightPlanner.Controllers
         {
             try
             {
-                // flight = FlightStorage.AddFlight(flight);
-                _context.Flights.Add(flight);
-                _context.SaveChanges();
+                flight = FlightStorage.AddFlight(flight, _context);
+                // _context.Flights.Add(flight);
+                // _context.SaveChanges();
             }
             catch (FlightAlreadyExistException e)
             {
@@ -58,14 +58,15 @@ namespace FlightPlanner.Controllers
         [HttpDelete]
         public IActionResult DelFlight(int id)
         {
-            // FlightStorage.DeleteFlightById(id);
-            var flight = _context.Flights.FirstOrDefault(f => f.Id == id);
-            if (flight != null)
-            {
-                _context.Flights.Remove(flight);
-                _context.SaveChanges();
-
-            }
+            FlightStorage.DeleteFlightById(id, _context);
+            
+            // var flight = _context.Flights.FirstOrDefault(f => f.Id == id);
+            // if (flight != null)
+            // {
+            //     _context.Flights.Remove(flight);
+            //     _context.SaveChanges();
+            //
+            // }
 
             return Ok();
         }

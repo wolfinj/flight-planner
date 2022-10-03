@@ -1,21 +1,23 @@
 using FlightPlanner.Exceptions;
 using KellermanSoftware.CompareNetObjects;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace FlightPlanner.Helpers;
 
 public static class ExtensionMethods
 {
-    public static void DoesFlightAlreadyExist(this List<Flight> flights, Flight flight)
+    public static void DoesFlightAlreadyExist(this  IIncludableQueryable<Flight,Airport> flights, Flight flight)
     {
         var doesFlightAlreadyExist = false;
 
         CompareLogic compare = new CompareLogic();
         compare.Config.MembersToIgnore.Add("Id");
 
-        flights.ForEach(f =>
+        foreach (var fl in flights)
         {
-            if (compare.Compare(f, flight).AreEqual) doesFlightAlreadyExist = true;
-        });
+            if (compare.Compare(fl, flight).AreEqual) doesFlightAlreadyExist = true;
+        }
 
         if (doesFlightAlreadyExist)
         {

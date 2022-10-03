@@ -27,11 +27,11 @@ namespace FlightPlanner.Controllers
         [AllowAnonymous]
         public IActionResult GetFlight()
         {
-            // FlightStorage.Clear();
-            _context.Flights.RemoveRange(_context.Flights);
-            _context.Airports.RemoveRange(_context.Airports);
-            _context.SaveChanges();
-            return Ok("hi From admin api.");
+            FlightStorage.Clear(_context);
+            // _context.Flights.RemoveRange(_context.Flights);
+            // _context.Airports.RemoveRange(_context.Airports);
+            // _context.SaveChanges();
+            return Ok("Db cleared.");
         }
     }
 }
