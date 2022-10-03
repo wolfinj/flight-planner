@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace FlightPlanner;
 
 public class Airport : IEquatable<Airport>
 {
+    [Key, JsonIgnore] 
+    public int Id { get; set; }
     public string Country { get; init; }
 
     public string City { get; init; }

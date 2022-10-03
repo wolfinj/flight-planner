@@ -1,6 +1,8 @@
 using FlightPlanner.Exceptions;
+using FlightPlanner.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Controllers
 {
@@ -8,11 +10,23 @@ namespace FlightPlanner.Controllers
     [ApiController, Authorize]
     public class AdminApiController : ControllerBase
     {
+        private readonly FlightPlannerDbContext _context;
+        
+        public AdminApiController(FlightPlannerDbContext context)
+        {
+            _context = context;
+        }
+        
         [Route("flights/{id}")]
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
-            var flight = FlightStorage.GetFlightById(id);
+            // var flight = FlightStorage.GetFlightById(id);
+            var flight = _context.Flights
+                .Include(f=>f.From)
+                .Include(f=>f.To)
+                .FirstOrDefault(f => f.Id == id);
+            
             if (flight == null) return NotFound("Flight not found.");
 
             return Ok(flight);
@@ -24,7 +38,9 @@ namespace FlightPlanner.Controllers
         {
             try
             {
-                flight = FlightStorage.AddFlight(flight);
+                // flight = FlightStorage.AddFlight(flight);
+                _context.Flights.Add(flight);
+                _context.SaveChanges();
             }
             catch (FlightAlreadyExistException e)
             {
@@ -42,7 +58,14 @@ namespace FlightPlanner.Controllers
         [HttpDelete]
         public IActionResult DelFlight(int id)
         {
-            FlightStorage.DeleteFlightById(id);
+            // FlightStorage.DeleteFlightById(id);
+            var flight = _context.Flights.FirstOrDefault(f => f.Id == id);
+            if (flight != null)
+            {
+                _context.Flights.Remove(flight);
+                _context.SaveChanges();
+
+            }
 
             return Ok();
         }
