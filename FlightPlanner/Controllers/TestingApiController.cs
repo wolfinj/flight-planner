@@ -1,4 +1,4 @@
-using FlightPlanner.Helpers;
+using FlightPlaner.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

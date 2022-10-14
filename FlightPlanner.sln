@@ -4,6 +4,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlanner", "FlightPlan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlannerTests", "FlightPlannerTests\FlightPlannerTests.csproj", "{DFC1B15E-9B13-4D11-A9E1-A4CE382870D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlanner.Core", "FlightPlanner.Core\FlightPlanner.Core.csproj", "{70DF8EF2-CFBA-4E25-A6E2-70C7C6A17140}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlaner.Data", "FlightPlaner.Data\FlightPlaner.Data.csproj", "{F99276AB-F187-4E6F-BF14-663F0696291A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlaner.Services", "FlightPlaner.Services\FlightPlaner.Services.csproj", "{F9E156EC-1862-47A6-AE7F-F274A8E4CC00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +24,17 @@ Global
 		{DFC1B15E-9B13-4D11-A9E1-A4CE382870D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFC1B15E-9B13-4D11-A9E1-A4CE382870D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFC1B15E-9B13-4D11-A9E1-A4CE382870D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70DF8EF2-CFBA-4E25-A6E2-70C7C6A17140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70DF8EF2-CFBA-4E25-A6E2-70C7C6A17140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70DF8EF2-CFBA-4E25-A6E2-70C7C6A17140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70DF8EF2-CFBA-4E25-A6E2-70C7C6A17140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F99276AB-F187-4E6F-BF14-663F0696291A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F99276AB-F187-4E6F-BF14-663F0696291A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F99276AB-F187-4E6F-BF14-663F0696291A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F99276AB-F187-4E6F-BF14-663F0696291A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9E156EC-1862-47A6-AE7F-F274A8E4CC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E156EC-1862-47A6-AE7F-F274A8E4CC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E156EC-1862-47A6-AE7F-F274A8E4CC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E156EC-1862-47A6-AE7F-F274A8E4CC00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

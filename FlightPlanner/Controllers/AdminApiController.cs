@@ -1,5 +1,6 @@
-using FlightPlanner.Exceptions;
-using FlightPlanner.Helpers;
+using FlightPlanner.Core.Exceptions;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,18 +10,24 @@ namespace FlightPlanner.Controllers;
 [ApiController, Authorize]
 public class AdminApiController : ControllerBase
 {
-    private readonly FlightPlannerDbContext _context;
+    private readonly IFlightService _flightService;
 
-    public AdminApiController(FlightPlannerDbContext context)
+    public AdminApiController(IFlightService flightService)
     {
-        _context = context;
+        _flightService = flightService;
     }
 
+    [HttpGet]
+    public IActionResult GetAllFlights()
+    {
+        return Ok(_flightService.GetAll());
+    }
+    
     [Route("{id:int}")]
     [HttpGet]
     public IActionResult GetFlight(int id)
     {
-        var flight = FlightStorage.GetFlightById(id, _context);
+        var flight = _flightService.GetCompleteFlightById(id);
 
         if (flight == null) return NotFound("Flight not found.");
 
@@ -31,9 +38,10 @@ public class AdminApiController : ControllerBase
     [HttpPut]
     public IActionResult PutFlight(Flight flight)
     {
+        Flight newFlight;
         try
         {
-            flight = FlightStorage.AddFlight(flight, _context);
+            newFlight=_flightService.AddFlight(flight);
         }
         catch (FlightAlreadyExistException e)
         {
@@ -44,15 +52,20 @@ public class AdminApiController : ControllerBase
             return BadRequest(e.Message);
         }
 
-        return Created("Flight created.", flight);
+        var uri = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{Request.Path}/{flight.Id}";
+        return Created(uri, newFlight);
     }
 
     [Route("{id:int}")]
     [HttpDelete]
     public IActionResult DelFlight(int id)
     {
-        FlightStorage.DeleteFlightById(id, _context);
-
+        var flight = _flightService.GetById(id);
+        if (flight!=null)
+        {
+            _flightService.Delete(flight);
+            
+        }
         return Ok();
     }
 }

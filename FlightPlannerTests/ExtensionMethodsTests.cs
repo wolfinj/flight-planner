@@ -1,4 +1,6 @@
 using FlightPlanner;
+using FlightPlanner.Core.Helpers;
+using FlightPlanner.Core.Models;
 using FlightPlanner.Helpers;
 
 namespace FlightPlannerTests;

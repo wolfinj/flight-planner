@@ -1,7 +1,8 @@
-using FlightPlanner.Exceptions;
+using FlightPlanner.Core.Exceptions;
+using FlightPlanner.Core.Models;
 using KellermanSoftware.CompareNetObjects;
 
-namespace FlightPlanner.Helpers;
+namespace FlightPlanner.Core.Helpers;
 
 public static class ExtensionMethods
 {

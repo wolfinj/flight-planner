@@ -1,6 +1,8 @@
-namespace FlightPlanner.Helpers;
-
+using FlightPlanner.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+namespace FlightPlaner.Data;
 
 public class FlightPlannerDbContext : DbContext
 {
@@ -14,8 +16,14 @@ public class FlightPlannerDbContext : DbContext
         _configuration = configuration;
     }
 
+    // public FlightPlannerDbContext(DbContextOptions options) : base(options)
+    // {
+    //     
+    // }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseSqlite(_configuration.GetConnectionString("Flight-planner"));
+        // options.UseSqlite(_configuration.GetConnectionString("Flight-planner"));
+        options.UseSqlServer(_configuration.GetConnectionString("Flight-planner"));
     }
 }

@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FlightPlanner;
+namespace FlightPlanner.Core.Models;
 
-public class Flight : IEquatable<Flight>
+public class Flight : Entity, IEquatable<Flight>
 {
     [Key] 
-    public int Id { get; set; }
     public Airport From { get; set; }
     public Airport To { get; set; }
     public string Carrier { get; set; }

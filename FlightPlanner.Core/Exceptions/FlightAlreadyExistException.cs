@@ -1,4 +1,4 @@
-namespace FlightPlanner.Exceptions;
+namespace FlightPlanner.Core.Exceptions;
 
 public class FlightAlreadyExistException : Exception
 {

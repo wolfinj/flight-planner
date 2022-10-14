@@ -1,6 +1,9 @@
+using FlightPlaner.Data;
+using FlightPlaner.Services;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
 using FlightPlanner.Helpers;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
 builder.Services.AddDbContext<FlightPlannerDbContext>();
+
+builder.Services.AddScoped<IDbService, DbService>();
+builder.Services.AddScoped<IEntityService<Airport>, EntityService<Airport>>();
+builder.Services.AddScoped<IEntityService<Flight>, EntityService<Flight>>();
+builder.Services.AddScoped<IFlightService, FlightService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

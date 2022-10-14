@@ -1,4 +1,5 @@
-using FlightPlanner.Helpers;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers;
@@ -7,19 +8,20 @@ namespace FlightPlanner.Controllers;
 [ApiController]
 public class CustomerApiController : ControllerBase
 {
-    private readonly FlightPlannerDbContext _context;
+    private readonly IFlightService _flightService;
 
-    public CustomerApiController(FlightPlannerDbContext context)
+    public CustomerApiController(IFlightService flightService)
     {
-        _context = context;
+        _flightService = flightService;
     }
 
     [Route("airports")]
     [HttpGet]
     public IActionResult GetAirports(string search)
     {
-        var result = FlightStorage.GetAirportsByKeyword(search, _context);
-
+        
+        var result = _flightService.GetAirportsByKeyword(search);
+        
         return Ok(result);
     }
 
@@ -27,7 +29,8 @@ public class CustomerApiController : ControllerBase
     [HttpGet]
     public IActionResult GetFlight(int id)
     {
-        var flight = FlightStorage.GetFlightById(id, _context);
+        var flight = _flightService.GetCompleteFlightById(id);
+        
         if (flight == null) return NotFound("Flight not found.");
 
         return Ok(flight);
@@ -39,7 +42,7 @@ public class CustomerApiController : ControllerBase
     {
         if (flight.From == flight.To) return BadRequest();
 
-        var result = FlightStorage.SearchFlight(flight, _context);
+        var result = _flightService.SearchFlight(flight);
 
         return Ok(result);
     }
