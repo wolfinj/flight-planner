@@ -38,7 +38,7 @@ public class AdminApiController : ControllerBase
     [HttpPut]
     public IActionResult PutFlight(Flight flight)
     {
-        Flight newFlight;
+        IServiceResult newFlight;
         try
         {
             newFlight=_flightService.AddFlight(flight);
@@ -52,8 +52,13 @@ public class AdminApiController : ControllerBase
             return BadRequest(e.Message);
         }
 
-        var uri = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{Request.Path}/{flight.Id}";
-        return Created(uri, newFlight);
+        if (newFlight.Success)
+        {
+            var uri = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{Request.Path}/{flight.Id}";
+            return Created(uri, newFlight.Entity);
+        }
+
+        return Problem(newFlight.FormattedErrors);
     }
 
     [Route("{id:int}")]

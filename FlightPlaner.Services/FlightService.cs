@@ -21,37 +21,26 @@ public class FlightService : EntityService<Flight>, IFlightService
             .SingleOrDefault(f => f.Id == id);
     }
 
-    public Flight AddFlight(Flight flight)
+    public ServiceResult AddFlight(Flight flight)
     {
-        _context.Flights
-            .Include(f => f.To)
-            .Include(f => f.From)
-            .DoesFlightAlreadyExist(flight);
-
         if (!flight.IsFlightValid()) throw new FlightIsNotValidException();
+        
+        if (DoesFlightAlreadyExist(flight)) throw new FlightAlreadyExistException();
 
         _context.Flights.Add(flight);
         _context.SaveChanges();
-        return flight;
+        return new ServiceResult(true).SetEntity(flight);
     }
-    
-    public  Airport[] GetAirportsByKeyword(string keyword)
+
+    public Airport[] GetAirportsByKeyword(string keyword)
     {
-            var airports = new List<Airport>();
+        var distAirports = _context.Airports.Distinct().ToList();
+        var distAirportsFilter = distAirports.Where(a =>
+                a.AirportContainsKeyword(keyword.Trim())
+            )
+            .ToArray();
 
-            var flIncludedAirports = _context.Flights
-                .Include(f => f.From)
-                .Include(f => f.To);
-
-            foreach (var fl in flIncludedAirports)
-            {
-                if (!airports.DoesAirportAlreadyExists(fl.From))
-                    airports.Add(fl.From);
-                if (!airports.DoesAirportAlreadyExists(fl.To))
-                    airports.Add(fl.To);
-            }
-
-            return airports.Where(a => a.AirportContainsKeyword(keyword.Trim())).ToArray();
+        return distAirportsFilter;
     }
     
     public  PageResult SearchFlight(SearchFlightsRequest request)
@@ -70,5 +59,25 @@ public class FlightService : EntityService<Flight>, IFlightService
                 Page = 0,
                 TotalItems = result.Count()
             };
+    }
+
+    public bool DoesFlightAlreadyExist(Flight flight)
+    {
+        var existingFlight = _context.Flights
+            .Include(f=>f.To)
+            .Include(f=>f.From)
+            .Any(f =>
+            f.From.AirportCode== flight.From.AirportCode
+            &&
+            f.To.AirportCode== flight.To.AirportCode
+            &&
+            f.Carrier== flight.Carrier
+            &&
+            f.DepartureTime== flight.DepartureTime
+            &&
+            f.ArrivalTime== flight.ArrivalTime);
+
+        
+        return existingFlight;
     }
 }

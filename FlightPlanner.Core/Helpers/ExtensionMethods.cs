@@ -1,4 +1,3 @@
-using FlightPlanner.Core.Exceptions;
 using FlightPlanner.Core.Models;
 using KellermanSoftware.CompareNetObjects;
 
@@ -6,24 +5,6 @@ namespace FlightPlanner.Core.Helpers;
 
 public static class ExtensionMethods
 {
-    public static void DoesFlightAlreadyExist(this IEnumerable<Flight> flights, Flight flight)
-    {
-        var doesFlightAlreadyExist = false;
-
-        var compare = new CompareLogic();
-        compare.Config.MembersToIgnore.Add("Id");
-
-        foreach (var fl in flights)
-        {
-            if (compare.Compare(fl, flight).AreEqual) doesFlightAlreadyExist = true;
-        }
-
-        if (doesFlightAlreadyExist)
-        {
-            throw new FlightAlreadyExistException();
-        }
-    }
-
     public static bool IsFlightValid(this Flight flight)
     {
         var isNull = string.IsNullOrEmpty(flight.Carrier.Trim()) ||
@@ -64,6 +45,8 @@ public static class ExtensionMethods
                airport.AirportCode.ToLower().Contains(name.ToLower());
     }
 
+    
+    
     public static bool DoesAirportAlreadyExists(this List<Airport> airports, Airport airport)
     {
         var compare = new CompareLogic
@@ -73,7 +56,7 @@ public static class ExtensionMethods
                 CaseSensitive = false
             }
         };
-
+    
         return airports.Any(a => compare.Compare(a, airport).AreEqual);
     }
 }
