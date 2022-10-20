@@ -20,7 +20,9 @@ public class TestingApiController : ControllerBase
     [AllowAnonymous]
     public IActionResult GetFlight()
     {
-        FlightStorage.Clear(_context);
+        _context.Flights.RemoveRange(_context.Flights);
+        _context.Airports.RemoveRange(_context.Airports);
+        _context.SaveChanges();
         
         return Ok("Db cleared.");
     }

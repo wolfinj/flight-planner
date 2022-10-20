@@ -15,48 +15,48 @@ public class FlightService : EntityService<Flight>, IFlightService
 
     public Flight GetCompleteFlightById(int id)
     {
-        return _context.Flights
-            .Include(f => f.From)
-            .Include(f => f.To)
-            .SingleOrDefault(f => f.Id == id);
-    }
-
-    public Flight AddFlight(Flight flight)
-    {
-        _context.Flights
-            .Include(f => f.To)
-            .Include(f => f.From)
-            .DoesFlightAlreadyExist(flight);
-
-        if (!flight.IsFlightValid()) throw new FlightIsNotValidException();
-
-        _context.Flights.Add(flight);
-        _context.SaveChanges();
-        return flight;
-    }
-    
-    public  Airport[] GetAirportsByKeyword(string keyword)
-    {
-            var airports = new List<Airport>();
-
-            var flIncludedAirports = _context.Flights
+        lock (Locker.LockObject)
+        {
+            return Context.Flights
                 .Include(f => f.From)
-                .Include(f => f.To);
-
-            foreach (var fl in flIncludedAirports)
-            {
-                if (!airports.DoesAirportAlreadyExists(fl.From))
-                    airports.Add(fl.From);
-                if (!airports.DoesAirportAlreadyExists(fl.To))
-                    airports.Add(fl.To);
-            }
-
-            return airports.Where(a => a.AirportContainsKeyword(keyword.Trim())).ToArray();
+                .Include(f => f.To)
+                .SingleOrDefault(f => f.Id == id);
+        }
     }
-    
-    public  PageResult SearchFlight(SearchFlightsRequest request)
+
+    public ServiceResult AddFlight(Flight flight)
     {
-            var result = _context.Flights.Where(f =>
+        lock (Locker.LockObject)
+        {
+            if (!flight.IsFlightValid()) throw new FlightIsNotValidException();
+
+            if (DoesFlightAlreadyExist(flight)) throw new FlightAlreadyExistException();
+
+            Context.Flights.Add(flight);
+            Context.SaveChanges();
+            return new ServiceResult(true).SetEntity(flight);
+        }
+    }
+
+    public Airport[] GetAirportsByKeyword(string keyword)
+    {
+        lock (Locker.LockObject)
+        {
+            var distAirports = Context.Airports.Distinct().ToList();
+            var distAirportsFilter = distAirports.Where(a =>
+                    a.AirportContainsKeyword(keyword.Trim())
+                )
+                .ToArray();
+
+            return distAirportsFilter;
+        }
+    }
+
+    public PageResult SearchFlight(SearchFlightsRequest request)
+    {
+        lock (Locker.LockObject)
+        {
+            var result = Context.Flights.Where(f =>
                 f.From.AirportCode.ToLower() == request.From.ToLower()
                 &&
                 f.To.AirportCode.ToLower() == request.To.ToLower()
@@ -70,5 +70,28 @@ public class FlightService : EntityService<Flight>, IFlightService
                 Page = 0,
                 TotalItems = result.Count()
             };
+        }
+    }
+
+    public bool DoesFlightAlreadyExist(Flight flight)
+    {
+        lock (Locker.LockObject)
+        {
+            var existingFlight = Context.Flights
+                .Include(f => f.To)
+                .Include(f => f.From)
+                .Any(f =>
+                    f.From.AirportCode == flight.From.AirportCode
+                    &&
+                    f.To.AirportCode == flight.To.AirportCode
+                    &&
+                    f.Carrier == flight.Carrier
+                    &&
+                    f.DepartureTime == flight.DepartureTime
+                    &&
+                    f.ArrivalTime == flight.ArrivalTime);
+
+            return existingFlight;
+        }
     }
 }

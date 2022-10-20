@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CompareNETObjects" Version="4.78.0" />
+        <PackageReference Include="CompareNETObjects" Version="4.78.0"/>
     </ItemGroup>
 
 </Project>

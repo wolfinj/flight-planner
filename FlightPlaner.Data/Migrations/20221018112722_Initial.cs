@@ -24,6 +24,20 @@ namespace FlightPlaner.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Flights",
                 columns: table => new
                 {
@@ -61,12 +75,20 @@ namespace FlightPlaner.Data.Migrations
                 name: "IX_Flights_ToId",
                 table: "Flights",
                 column: "ToId");
+            
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserName", "Password" },
+                values: new object[] { "codelex-admin", "UGFzc3dvcmQxMjM=" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Flights");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Airports");

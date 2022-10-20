@@ -3,15 +3,17 @@ using System.Text.Json.Serialization;
 
 namespace FlightPlanner.Core.Models;
 
-public class Airport :Entity, IEquatable<Airport>
+public class Airport : Entity, IEquatable<Airport>
 {
-    [Key,JsonIgnore]
+    [Key]
+    [JsonIgnore]
     public override int Id { get; set; }
+
     public string Country { get; init; }
 
     public string City { get; init; }
 
-    [JsonPropertyName("airport")] 
+    [JsonPropertyName("airport")]
     public string AirportCode { get; init; }
 
     public bool Equals(Airport? other)

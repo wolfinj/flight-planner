@@ -4,25 +4,25 @@ using FlightPlanner.Core.Services;
 
 namespace FlightPlaner.Services;
 
-public class EntityService<T> : DbService, IEntityService<T> where T: Entity 
+public class EntityService<T> : DbService, IEntityService<T> where T : Entity
 {
     public EntityService(FlightPlannerDbContext context) : base(context)
     {
     }
-    
-    public void Create(T entity)
+
+    public ServiceResult Create(T entity)
     {
-        Create<T>(entity);
+        return Create<T>(entity);
     }
 
-    public void Delete(T entity)
+    public ServiceResult Delete(T entity)
     {
-        Delete<T>(entity);
+        return Delete<T>(entity);
     }
 
-    public void Update(T entity)
+    public ServiceResult Update(T entity)
     {
-        Update<T>(entity);
+        return Update<T>(entity);
     }
 
     public List<T> GetAll()
@@ -39,6 +39,4 @@ public class EntityService<T> : DbService, IEntityService<T> where T: Entity
     {
         return Query<T>();
     }
-
-    
 }

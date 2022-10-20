@@ -5,45 +5,58 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlaner.Services;
 
-public class DbService :IDbService
+public class DbService : IDbService
 {
-    protected FlightPlannerDbContext _context;
+    protected readonly FlightPlannerDbContext Context;
 
     public DbService(FlightPlannerDbContext context)
     {
-        _context = context;
+        Context = context;
     }
 
-    public void Create<T>(T entity) where T : Entity
+    public ServiceResult Create<T>(T entity) where T : Entity
     {
-        _context.Set<T>().Add(entity);
-        _context.SaveChanges();
+        Context.Set<T>().Add(entity);
+        Context.SaveChanges();
+
+        return new ServiceResult(true).SetEntity(entity);
     }
 
-    public void Delete<T>(T entity) where T : Entity
+    public ServiceResult Delete<T>(T entity) where T : Entity
     {
-        _context.Set<T>().Remove(entity);
-        _context.SaveChanges();
+        try
+        {
+            Context.Set<T>().Remove(entity);
+            Context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            return new ServiceResult(false).AddError(e.Message);
+        }
+
+        return new ServiceResult(true);
     }
 
-    public void Update<T>(T entity) where T : Entity
+    public ServiceResult Update<T>(T entity) where T : Entity
     {
-        _context.Entry(entity).State = EntityState.Modified;
-        _context.SaveChanges();
+        Context.Entry(entity).State = EntityState.Modified;
+        Context.SaveChanges();
+
+        return new ServiceResult(true).SetEntity(entity);
     }
 
     public List<T> GetAll<T>() where T : Entity
     {
-        return _context.Set<T>().ToList();
+        return Context.Set<T>().ToList();
     }
 
     public T? GetById<T>(int id) where T : Entity
     {
-        return _context.Set<T>().SingleOrDefault(e => e.Id == id);
+        return Context.Set<T>().SingleOrDefault(e => e.Id == id);
     }
 
     public IQueryable<T> Query<T>() where T : Entity
     {
-        return _context.Set<T>().AsQueryable();
+        return Context.Set<T>().AsQueryable();
     }
 }

@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FlightPlaner.Data\FlightPlaner.Data.csproj" />
-      <ProjectReference Include="..\FlightPlanner.Core\FlightPlanner.Core.csproj" />
+        <ProjectReference Include="..\FlightPlaner.Data\FlightPlaner.Data.csproj"/>
+        <ProjectReference Include="..\FlightPlanner.Core\FlightPlanner.Core.csproj"/>
     </ItemGroup>
 
 </Project>

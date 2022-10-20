@@ -19,7 +19,6 @@ public class CustomerApiController : ControllerBase
     [HttpGet]
     public IActionResult GetAirports(string search)
     {
-        
         var result = _flightService.GetAirportsByKeyword(search);
         
         return Ok(result);

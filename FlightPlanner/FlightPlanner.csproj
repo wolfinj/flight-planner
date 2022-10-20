@@ -11,24 +11,28 @@
         <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FlightPlaner.Data\FlightPlaner.Data.csproj" />
-      <ProjectReference Include="..\FlightPlaner.Services\FlightPlaner.Services.csproj" />
-      <ProjectReference Include="..\FlightPlanner.Core\FlightPlanner.Core.csproj" />
+        <ProjectReference Include="..\FlightPlaner.Data\FlightPlaner.Data.csproj" />
+        <ProjectReference Include="..\FlightPlaner.Services\FlightPlaner.Services.csproj" />
+        <ProjectReference Include="..\FlightPlanner.Core\FlightPlanner.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Models" />
     </ItemGroup>
 
 </Project>

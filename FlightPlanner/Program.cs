@@ -18,10 +18,13 @@ builder.Services.AddAuthentication("BasicAuthentication")
 
 builder.Services.AddDbContext<FlightPlannerDbContext>();
 
+builder.Services.AddScoped<IFlightPlannerDbContext, FlightPlannerDbContext>();
 builder.Services.AddScoped<IDbService, DbService>();
 builder.Services.AddScoped<IEntityService<Airport>, EntityService<Airport>>();
 builder.Services.AddScoped<IEntityService<Flight>, EntityService<Flight>>();
+builder.Services.AddScoped<IEntityService<User>, EntityService<User>>();
 builder.Services.AddScoped<IFlightService, FlightService>();
+// builder.Services.AddScoped<IServiceResult, ServiceResult>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
