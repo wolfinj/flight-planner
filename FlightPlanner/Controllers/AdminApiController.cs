@@ -39,6 +39,7 @@ public class AdminApiController : ControllerBase
     public IActionResult PutFlight(Flight flight)
     {
         IServiceResult newFlight;
+        
         try
         {
             newFlight=_flightService.AddFlight(flight);

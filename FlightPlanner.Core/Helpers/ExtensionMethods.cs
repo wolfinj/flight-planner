@@ -45,8 +45,6 @@ public static class ExtensionMethods
                airport.AirportCode.ToLower().Contains(name.ToLower());
     }
 
-    
-    
     public static bool DoesAirportAlreadyExists(this List<Airport> airports, Airport airport)
     {
         var compare = new CompareLogic
@@ -56,7 +54,7 @@ public static class ExtensionMethods
                 CaseSensitive = false
             }
         };
-    
+
         return airports.Any(a => compare.Compare(a, airport).AreEqual);
     }
 }

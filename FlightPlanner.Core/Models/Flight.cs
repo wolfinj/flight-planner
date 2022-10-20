@@ -4,8 +4,9 @@ namespace FlightPlanner.Core.Models;
 
 public class Flight : Entity, IEquatable<Flight>
 {
-    [Key] 
+    [Key]
     public Airport From { get; set; }
+
     public Airport To { get; set; }
     public string Carrier { get; set; }
     public string DepartureTime { get; set; }
